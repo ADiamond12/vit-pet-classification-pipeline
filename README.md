@@ -2,6 +2,15 @@
 
 Compact end-to-end ML project: data handling, Vision Transformer fine-tuning, FastAPI inference, and an optional Streamlit UI.
 
+![Streamlit UI empty state](assets/ui-empty.png)
+
+## What this demonstrates
+
+- A practical computer-vision delivery path, not only a notebook experiment.
+- Separate training, inference, API, and UI modules.
+- Public-repo posture: no datasets, model weights, `.env` files, or private artifacts committed.
+- Lightweight CI tests that validate inference/bootstrap helper behavior without requiring model weights.
+
 ## Tech stack
 - Hugging Face Transformers (ViT) on PyTorch
 - NumPy and pandas for data handling
@@ -16,7 +25,7 @@ Compact end-to-end ML project: data handling, Vision Transformer fine-tuning, Fa
 - Model artifacts and datasets stay out of version control on purpose.
 - The repo supports local checkpoints first and an optional first-run bootstrap path for a published fine-tuned model.
 
-## Directory Layout
+## Directory layout
 ```
 vit-pet-classification-pipeline/
 |- data/             # (ignored) labels.csv and images/
@@ -26,7 +35,7 @@ vit-pet-classification-pipeline/
 |  |- inference/     # bootstrap.py, predict.py (CLI helper)
 |  |- api/           # main.py (FastAPI /predict)
 |  |- ui/            # app.py (Streamlit UI)
-|- assets/           # screenshots (add your images here)
+|- assets/           # sanitized screenshots
 |- requirements.txt
 |- .gitignore
 `- README.md
@@ -103,24 +112,22 @@ pytest
 These tests cover the inference helper layer without requiring committed model weights.
 
 ## Screenshots
-Place images in `assets/` and reference them here. Examples:
-- Empty state: `assets/ui-empty.png`
-- Cat prediction: `assets/ui-cat-1.png`
-- Cat prediction (alt): `assets/ui-cat-2.png`
-- Dog prediction: `assets/ui-dog-1.png`
 
-Markdown example:
+The committed screenshot is sanitized and shows the clean Streamlit UI without external company branding or private data.
+
 ```
-![Streamlit UI - empty](assets/ui-empty.png)
-![Streamlit UI - cat](assets/ui-cat-1.png)
-![Streamlit UI - dog](assets/ui-dog-1.png)
+assets/ui-empty.png
 ```
 
-## GitHub remote
-If you renamed the repo on GitHub, update the local remote:
-```
-git remote set-url origin https://github.com/<you>/vit-pet-classification-pipeline.git
-```
+Prediction screenshots can be regenerated after a project-owned public checkpoint is published or after local training into `models/vit_catsdogs`.
+
+## Public-readiness checklist
+
+- [x] README, report, license, security notes
+- [x] Tests pass without model weights
+- [x] Dataset/model/cache folders ignored
+- [x] Sanitized screenshots only
+- [x] No API keys or private data committed
 
 
 
