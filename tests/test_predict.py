@@ -69,19 +69,19 @@ def import_predict_module(monkeypatch):
     fake_torch.no_grad = lambda: nullcontext()
     fake_torch.softmax = lambda _logits, dim: [FakeProbabilities([0.2, 0.8])]
 
-    class PlaceholderProcessor:
+    class LoaderSentinelProcessor:
         @staticmethod
         def from_pretrained(_model_dir):
             raise AssertionError("Processor loader should be patched in the test")
 
-    class PlaceholderModel:
+    class LoaderSentinelModel:
         @staticmethod
         def from_pretrained(_model_dir):
             raise AssertionError("Model loader should be patched in the test")
 
     fake_transformers = ModuleType("transformers")
-    fake_transformers.ViTForImageClassification = PlaceholderModel
-    fake_transformers.ViTImageProcessor = PlaceholderProcessor
+    fake_transformers.ViTForImageClassification = LoaderSentinelModel
+    fake_transformers.ViTImageProcessor = LoaderSentinelProcessor
 
     monkeypatch.setitem(sys.modules, "torch", fake_torch)
     monkeypatch.setitem(sys.modules, "transformers", fake_transformers)
