@@ -1,6 +1,6 @@
-﻿# vit-pet-classification-pipeline - Cats vs Dogs Classification
+﻿# ViT Pet Classification Pipeline
 
-Compact end-to-end ML project: data handling, Vision Transformer fine-tuning, FastAPI inference, and an optional Streamlit UI.
+End-to-end computer-vision delivery path for cats-vs-dogs classification: data checks, Vision Transformer fine-tuning, FastAPI inference, CLI prediction, and a Streamlit review UI.
 
 ![Streamlit UI empty state](assets/ui-empty.png)
 
@@ -24,6 +24,18 @@ Compact end-to-end ML project: data handling, Vision Transformer fine-tuning, Fa
 - CI runs lightweight tests that do not require shipping model weights.
 - Model artifacts and datasets stay out of version control on purpose.
 - The repo supports local checkpoints first and an optional first-run bootstrap path for a published fine-tuned model.
+
+## Reviewer walkthrough
+
+For a quick review without private datasets or model weights:
+
+1. Read the public boundaries in `SECURITY.md`.
+2. Run `pytest` to verify the inference/bootstrap helper layer.
+3. Inspect `src/training/` for the data inspection, fine-tuning, and evaluation path.
+4. Inspect `src/api/main.py`, `src/inference/predict.py`, and `src/ui/app.py` for the delivery surfaces.
+5. Launch the UI with `streamlit run src/ui/app.py` to verify the clean upload flow.
+
+Prediction screenshots are intentionally not shipped until a project-owned public checkpoint is published or a local checkpoint is trained in `models/vit_catsdogs`.
 
 ## Directory layout
 ```
@@ -111,15 +123,15 @@ pytest
 
 These tests cover the inference helper layer without requiring committed model weights.
 
-## Screenshots
+## Demo screenshot
 
-The committed screenshot is sanitized and shows the clean Streamlit UI without external company branding or private data.
+The committed screenshot is sanitized and shows the clean Streamlit upload flow without external company branding, private data, datasets, or model artifacts.
 
 ```
 assets/ui-empty.png
 ```
 
-Prediction screenshots can be regenerated after a project-owned public checkpoint is published or after local training into `models/vit_catsdogs`.
+Prediction screenshots should be regenerated only after a project-owned public checkpoint is published or after local training into `models/vit_catsdogs`.
 
 ## Public-readiness checklist
 

@@ -49,6 +49,6 @@ Run:
 - Modular layout simplifies testing and extension.
 - Future: more epochs/tuning, augmentation, metrics logging, early stopping, publishing a project-owned fine-tuned checkpoint, and optional image-verification toggle for huge datasets.
 
-## Conclusion
-Built an end-to-end system: validated data, fine-tuned a ViT for cats vs dogs, served predictions via FastAPI, and provided a Streamlit UI. Key learnings: pretrained ViT adapts fast with clean data handling; clear separation of data/training/inference/API/UI keeps changes manageable. Next steps: richer evaluation (e.g., F1), broader tuning/augmentation, and automated tests.
+## Delivery Summary
+The project ties together data validation, ViT fine-tuning, FastAPI serving, CLI prediction, and a Streamlit review UI. The main engineering value is the separation between training, inference, API, and UI code, plus a public-repo posture that keeps datasets and model artifacts outside version control. Next steps are richer evaluation, broader tuning/augmentation, a project-owned public checkpoint, and broader tests around API/UI behavior.
 
