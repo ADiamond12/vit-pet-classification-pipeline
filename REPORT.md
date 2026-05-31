@@ -11,13 +11,14 @@ Deliver a compact end-to-end pipeline to classify cat vs dog images: data prep, 
 ## Vision Transformer & Model Choice
 The Vision Transformer (ViT) splits an image into fixed patches, embeds them with positional encodings, and processes the sequence with a Transformer encoder. Self-attention captures global relationships better than purely local filters and adapts well from a pretrained checkpoint with limited task data. We chose `google/vit-base-patch16-224` for its size/accuracy balance and replaced the head with a 2-class layer (`ignore_mismatched_sizes=True`).
 
-## Training Setup & Results
+## Training Setup & Evaluation Notes
 - Hyperparameters: `epochs=1`, `batch_size=8`, `learning_rate=2e-5`, `val_split=0.1`, `save_strategy="epoch"`.
 - Processing: `ViTImageProcessor` handles resize to 224x224, normalization, tensor conversion.
-- Results: Initial training showed ~93% validation accuracy. A full validation run achieved **99.96%** (2,428/2,429), and a 1,000-image sample measured ~99.8%:
+- Local evaluation path:
   ```
   python src/training/eval_vit.py --data-dir data --model-dir models/vit_catsdogs
   ```
+- Earlier local experiments showed high validation accuracy, but the public repository does not ship the dataset, model weights, or a reproducible metrics artifact. Treat the evaluation command as the source of truth for any local checkpoint you train or explicitly bootstrap.
 - Notes: Warnings about reinitialized classifier weights and `pin_memory` on CPU are expected and harmless.
 
 ## Inference & Serving
@@ -45,7 +46,7 @@ Run:
 9. CLI: `python src/inference/predict.py --image-path data/images/0.jpg`.
 
 ## Observations & Future Work
-- ViT adapts quickly; one epoch delivered strong accuracy.
+- ViT adapts quickly in local experiments, but public metrics should be regenerated from a project-owned checkpoint before being quoted externally.
 - Modular layout simplifies testing and extension.
 - Future: more epochs/tuning, augmentation, metrics logging, early stopping, publishing a project-owned fine-tuned checkpoint, and optional image-verification toggle for huge datasets.
 
