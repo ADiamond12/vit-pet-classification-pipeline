@@ -11,6 +11,12 @@ End-to-end computer-vision delivery path for cats-vs-dogs classification: data c
 - Public-repo posture: no datasets, model weights, `.env` files, or private artifacts committed.
 - Lightweight CI tests that validate inference/bootstrap helper behavior without requiring model weights.
 
+## Portfolio Role
+
+This is a supporting ML-delivery project. Its current public value is the engineering boundary around a vision model: training scripts, checkpoint resolution, FastAPI serving, CLI prediction, and a Streamlit review UI without committing private datasets or model weights.
+
+It should become a flagship ML project only after a project-owned checkpoint is published with a reproducible evaluation artifact. Until then, the honest demo is the safe empty-state UI plus tests that prove the delivery surfaces can run without private artifacts.
+
 ## Tech stack
 - Hugging Face Transformers (ViT) on PyTorch
 - NumPy and pandas for data handling
@@ -36,6 +42,16 @@ For a safe review without private datasets or model weights:
 5. Launch the UI with `streamlit run src/ui/app.py` to verify the clean upload flow.
 
 Prediction screenshots are intentionally not shipped until a project-owned public checkpoint is published or a local checkpoint is trained in `models/vit_catsdogs`.
+
+## Next Flagship Step
+
+To promote this from supporting project to stronger portfolio project:
+
+1. Train or publish a project-owned checkpoint.
+2. Regenerate metrics from a reproducible evaluation run.
+3. Add a model card with dataset source, label policy, limitations, and evaluation date.
+4. Capture one prediction screenshot from that owned checkpoint.
+5. Keep the no-private-artifact rule: `data/`, `models/`, `.cache/`, and local outputs stay ignored unless a curated public artifact is intentionally released.
 
 ## Directory layout
 ```

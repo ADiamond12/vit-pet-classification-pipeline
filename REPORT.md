@@ -3,6 +3,8 @@
 ## Objective
 Deliver a compact end-to-end pipeline to classify cat vs dog images: data prep, Vision Transformer fine-tuning, and serving predictions via API and UI. The goal is solid ML engineering across preprocessing, training, inference, and deployment.
 
+Public portfolio status: supporting ML-delivery project. The repo proves the training-serving-review structure, but it intentionally avoids public prediction claims until an owned checkpoint and reproducible metrics artifact are released.
+
 ## Dataset & Preprocessing
 - Layout: `data/labels.csv` (`image_name`, `label`), images in `data/images/`.
 - Safety: `filter_existing_images` drops missing or unreadable files and reports counts (~24,290 kept of 25,000).
@@ -48,7 +50,7 @@ Run:
 ## Observations & Future Work
 - Public metrics should be regenerated from a project-owned checkpoint before being quoted externally.
 - Modular layout simplifies testing and extension.
-- Future: more epochs/tuning, augmentation, metrics logging, early stopping, publishing a project-owned fine-tuned checkpoint, and optional image-verification toggle for huge datasets.
+- Future: more epochs/tuning, augmentation, metrics logging, early stopping, publishing a project-owned fine-tuned checkpoint, adding a model card, adding a dated evaluation artifact, and optional image-verification toggle for huge datasets.
 
 ## Delivery Summary
 The project ties together data validation, ViT fine-tuning, FastAPI serving, CLI prediction, and a Streamlit review UI. The main engineering value is the separation between training, inference, API, and UI code, plus a public-repo posture that keeps datasets and model artifacts outside version control. Next steps are richer evaluation, broader tuning/augmentation, a project-owned public checkpoint, and broader tests around API/UI behavior.
