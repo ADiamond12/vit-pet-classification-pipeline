@@ -27,7 +27,7 @@ End-to-end computer-vision delivery path for cats-vs-dogs classification: data c
 
 ## Reviewer walkthrough
 
-For a quick review without private datasets or model weights:
+For a safe review without private datasets or model weights:
 
 1. Read the public boundaries in `SECURITY.md`.
 2. Run `pytest` to verify the inference/bootstrap helper layer.
@@ -89,7 +89,7 @@ vit-pet-classification-pipeline/
   $env:VIT_PET_MODEL_REPO_ID="<published-fine-tuned-checkpoint>"
   uvicorn src.api.main:app --reload
   ```
-- Evaluate validation accuracy:
+- Evaluate a local checkpoint:
   ```
   python src/training/eval_vit.py --data-dir data --model-dir models/vit_catsdogs
   ```
@@ -121,7 +121,7 @@ Run the current lightweight test suite with:
 pytest
 ```
 
-These tests cover the inference helper layer without requiring committed model weights.
+These tests cover the inference helper layer without requiring committed model weights, private datasets, or a published checkpoint.
 
 ## Demo screenshot
 

@@ -10,9 +10,7 @@ from transformers import ViTForImageClassification, ViTImageProcessor
 
 from src.inference.bootstrap import DEFAULT_MODEL_DIR, MODEL_REPO_ID_ENV, ensure_model_dir
 
-# Default location of the fine-tuned weights and processor
 MODEL_DIR = os.getenv("MODEL_DIR", DEFAULT_MODEL_DIR.as_posix())
-# Prefer GPU when available for inference speed
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
@@ -33,7 +31,6 @@ def predict_image(image_input: Union[str, Image.Image], model, processor):
     else:
         image = Image.open(image_input).convert("RGB")
 
-    # Preprocess image and execute the model
     inputs = processor(images=image, return_tensors="pt").to(DEVICE)
     with torch.no_grad():
         outputs = model(**inputs)
@@ -56,7 +53,6 @@ def main():
     )
     args = parser.parse_args()
 
-    # Load artifacts once, then classify the requested image
     model, processor = load_model(args.model_dir, repo_id=args.model_repo_id)
     label, conf = predict_image(args.image_path, model, processor)
     print(f"Prediction: {label} (confidence: {conf:.2%})")

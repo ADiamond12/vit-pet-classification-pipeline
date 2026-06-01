@@ -1,34 +1,83 @@
-﻿import io
+import io
+
 import requests
 import streamlit as st
 from PIL import Image
 
-# Default REST endpoint for the FastAPI service
 DEFAULT_API_URL = "http://127.0.0.1:8000/predict"
+
+
+def health_url_from(api_url: str) -> str:
+    cleaned = api_url.rstrip("/")
+    if cleaned.endswith("/predict"):
+        return f"{cleaned.removesuffix('/predict')}/health"
+    return f"{cleaned}/health"
+
 
 st.set_page_config(page_title="ViT Pet Classification Pipeline", page_icon=":cat:", layout="wide")
 
-st.title("ViT Pet Classification Pipeline")
-st.caption("Upload an image, send it to the FastAPI model, and get a prediction.")
+st.markdown(
+    """
+    <style>
+      #MainMenu,
+      footer,
+      header,
+      [data-testid="stDeployButton"],
+      [data-testid="stToolbar"],
+      [data-testid="stDecoration"],
+      [data-testid="stStatusWidget"],
+      .stDeployButton {
+        display: none !important;
+      }
+      .block-container {
+        padding-top: 3rem;
+      }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
-# Sidebar controls
+st.title("ViT Pet Classification Pipeline")
+st.caption(
+    "Public-safe Streamlit review UI for a cats-vs-dogs ViT delivery path. "
+    "Predictions require a checkpoint-backed FastAPI service."
+)
+
 st.sidebar.header("Settings")
 api_url = st.sidebar.text_input("API URL", value=DEFAULT_API_URL)
 st.sidebar.info("Start FastAPI locally with: `uvicorn src.api.main:app --reload`")
 st.sidebar.caption(
-    "If the backend does not have a local checkpoint yet, set `VIT_PET_MODEL_REPO_ID` there to enable first-run model bootstrap."
+    "If the backend does not have a local checkpoint yet, set `VIT_PET_MODEL_REPO_ID` "
+    "there to enable first-run model bootstrap."
+)
+if st.sidebar.button("Check backend health", use_container_width=True):
+    try:
+        health_response = requests.get(health_url_from(api_url), timeout=10)
+        health_response.raise_for_status()
+    except requests.RequestException as exc:
+        st.sidebar.error(f"Backend health check failed: {exc}")
+    else:
+        st.sidebar.json(health_response.json())
+
+st.info(
+    "This public repo does not ship model weights or datasets. The safe screenshot shows the "
+    "upload and review flow only; prediction output should be captured after using a project-owned "
+    "checkpoint."
 )
 
 col_left, col_right = st.columns([1, 1])
 
 with col_left:
+    st.subheader("Image review")
     uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
     if uploaded_file:
         image = Image.open(uploaded_file).convert("RGB")
         st.image(image, caption="Preview", use_container_width=True)
+    else:
+        st.caption("Upload a JPG or PNG when a local or published checkpoint-backed API is running.")
 
 with col_right:
-    st.write("### Prediction")
+    st.subheader("Model response")
     if uploaded_file:
         if st.button("Send to model", type="primary", use_container_width=True):
             with st.spinner("Sending to API..."):
@@ -49,5 +98,4 @@ with col_right:
                     else:
                         st.error(f"Error {resp.status_code}: {resp.text}")
     else:
-        st.info("Upload a JPG or PNG to enable prediction.")
-
+        st.info("Prediction remains inactive until an image is selected and the FastAPI service is ready.")

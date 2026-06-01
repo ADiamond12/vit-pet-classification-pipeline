@@ -18,7 +18,7 @@ The Vision Transformer (ViT) splits an image into fixed patches, embeds them wit
   ```
   python src/training/eval_vit.py --data-dir data --model-dir models/vit_catsdogs
   ```
-- Earlier local experiments showed high validation accuracy, but the public repository does not ship the dataset, model weights, or a reproducible metrics artifact. Treat the evaluation command as the source of truth for any local checkpoint you train or explicitly bootstrap.
+- No public accuracy number is quoted in this repository because the public release does not ship the dataset, model weights, or a reproducible metrics artifact. Treat the evaluation command as the source of truth for any local checkpoint you train or explicitly bootstrap.
 - Notes: Warnings about reinitialized classifier weights and `pin_memory` on CPU are expected and harmless.
 
 ## Inference & Serving
@@ -46,7 +46,7 @@ Run:
 9. CLI: `python src/inference/predict.py --image-path data/images/0.jpg`.
 
 ## Observations & Future Work
-- ViT adapts quickly in local experiments, but public metrics should be regenerated from a project-owned checkpoint before being quoted externally.
+- Public metrics should be regenerated from a project-owned checkpoint before being quoted externally.
 - Modular layout simplifies testing and extension.
 - Future: more epochs/tuning, augmentation, metrics logging, early stopping, publishing a project-owned fine-tuned checkpoint, and optional image-verification toggle for huge datasets.
 
