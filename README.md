@@ -43,6 +43,15 @@ For a safe review without private datasets or model weights:
 
 Prediction screenshots are intentionally not shipped until a project-owned public checkpoint is published or a local checkpoint is trained in `models/vit_catsdogs`.
 
+## Reviewer Proof
+
+- **Problem:** many ML demos publish a prediction screen without explaining where the model, data, and metrics came from.
+- **First command:** `pytest`
+- **Proof artifact:** safe empty-state UI screenshot plus tests for checkpoint resolution and API contract behavior.
+- **Visual proof:** `assets/ui-empty.png` shows the review UI without implying an unavailable checkpoint.
+- **Validation:** 7 pytest tests and GitHub Actions CI.
+- **Current limitation:** prediction screenshots, confidence scores, and accuracy claims are withheld until a project-owned checkpoint and evaluation artifact are published.
+
 ## Next Flagship Step
 
 To promote this from supporting project to stronger portfolio project:
