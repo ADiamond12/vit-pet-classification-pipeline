@@ -4,7 +4,7 @@ from functools import lru_cache
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from PIL import Image
-from src.inference.bootstrap import DEFAULT_MODEL_DIR, MODEL_REPO_ID_ENV
+from src.inference.bootstrap import DEFAULT_MODEL_DIR, MODEL_REPO_ID_ENV, checkpoint_status
 
 MODEL_DIR = os.getenv("MODEL_DIR", DEFAULT_MODEL_DIR.as_posix())
 MODEL_REPO_ID = os.getenv(MODEL_REPO_ID_ENV)
@@ -26,10 +26,10 @@ def get_model_bundle():
 
 @app.get("/health")
 def health():
+    status = checkpoint_status(MODEL_DIR, MODEL_REPO_ID)
     return {
         "status": "ok",
-        "model_dir": MODEL_DIR,
-        "bootstrap_repo_id_configured": bool(MODEL_REPO_ID),
+        **status,
     }
 
 

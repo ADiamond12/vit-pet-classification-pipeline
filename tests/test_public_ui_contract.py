@@ -9,3 +9,5 @@ def test_streamlit_ui_keeps_public_boundary_language():
     assert "project-owned" in ui_source
     assert "checkpoint" in ui_source
     assert "Prediction remains inactive" in ui_source
+    assert "What this public UI proves" in ui_source
+    assert "Backend readiness is explicit" in ui_source

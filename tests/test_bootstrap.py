@@ -48,3 +48,25 @@ def test_ensure_model_dir_fails_without_local_or_repo_id(tmp_path: Path) -> None
         bootstrap.ensure_model_dir(model_dir=tmp_path / "missing-model")
 
     assert "VIT_PET_MODEL_REPO_ID" in str(exc_info.value)
+
+
+def test_checkpoint_status_reports_missing_artifacts_without_download(tmp_path: Path) -> None:
+    status = bootstrap.checkpoint_status(model_dir=tmp_path / "missing-model")
+
+    assert status["ready_for_prediction"] is False
+    assert status["local_checkpoint_available"] is False
+    assert status["bootstrap_repo_id_configured"] is False
+    assert status["artifact_source"] == "missing"
+    assert "committed" in status["artifact_policy"]
+    assert "public repo" in status["artifact_policy"]
+
+
+def test_checkpoint_status_detects_local_checkpoint(tmp_path: Path) -> None:
+    model_dir = tmp_path / "models" / "vit_catsdogs"
+    create_checkpoint(model_dir)
+
+    status = bootstrap.checkpoint_status(model_dir=model_dir)
+
+    assert status["ready_for_prediction"] is True
+    assert status["local_checkpoint_available"] is True
+    assert status["artifact_source"] == "local"

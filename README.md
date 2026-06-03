@@ -49,7 +49,8 @@ Prediction screenshots are intentionally not shipped until a project-owned publi
 - **First command:** `pytest`
 - **Proof artifact:** safe empty-state UI screenshot plus tests for checkpoint resolution and API contract behavior.
 - **Visual proof:** `assets/ui-empty.png` shows the review UI without implying an unavailable checkpoint.
-- **Validation:** 7 pytest tests and GitHub Actions CI.
+- **Health proof:** `/health` reports whether a local or bootstrap-cached checkpoint is ready without loading weights or downloading anything.
+- **Validation:** pytest tests and GitHub Actions CI cover checkpoint status, helper behavior, API contract, and public UI boundary wording.
 - **Current limitation:** prediction screenshots, confidence scores, and accuracy claims are withheld until a project-owned checkpoint and evaluation artifact are published.
 
 ## Next Flagship Step
@@ -58,7 +59,7 @@ To promote this from supporting project to stronger portfolio project:
 
 1. Train or publish a project-owned checkpoint.
 2. Regenerate metrics from a reproducible evaluation run.
-3. Add a model card with dataset source, label policy, limitations, and evaluation date.
+3. Fill in `docs/model-card-template.md` and `docs/evaluation-template.md` with dataset source, label policy, limitations, and evaluation date.
 4. Capture one prediction screenshot from that owned checkpoint.
 5. Keep the no-private-artifact rule: `data/`, `models/`, `.cache/`, and local outputs stay ignored unless a curated public artifact is intentionally released.
 
@@ -121,6 +122,10 @@ vit-pet-classification-pipeline/
 - Run the API:
   ```
   uvicorn src.api.main:app --reload
+  ```
+- Check API readiness without loading model weights:
+  ```
+  curl http://127.0.0.1:8000/health
   ```
 - Launch the Streamlit UI:
   ```

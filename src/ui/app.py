@@ -65,6 +65,16 @@ st.info(
     "checkpoint."
 )
 
+st.markdown(
+    """
+    **What this public UI proves**
+
+    - The reviewer flow can start without private datasets or model files.
+    - Backend readiness is explicit through the FastAPI health endpoint.
+    - Predictions stay inactive until a checkpoint-backed service is running.
+    """
+)
+
 col_left, col_right = st.columns([1, 1])
 
 with col_left:
@@ -78,6 +88,7 @@ with col_left:
 
 with col_right:
     st.subheader("Model response")
+    st.caption("Prediction results are shown only after a checkpoint-backed API accepts the upload.")
     if uploaded_file:
         if st.button("Send to model", type="primary", use_container_width=True):
             with st.spinner("Sending to API..."):

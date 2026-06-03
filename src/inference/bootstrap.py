@@ -76,3 +76,36 @@ def ensure_model_dir(
         f"Downloaded checkpoint for '{effective_repo_id}' is incomplete. "
         f"Expected config, processor, and weight files under '{resolved_path}'."
     )
+
+
+def checkpoint_status(
+    model_dir: str | os.PathLike[str] | None = None,
+    repo_id: str | None = None,
+    cache_dir: str | os.PathLike[str] | None = None,
+) -> dict[str, str | bool]:
+    """Report checkpoint readiness without downloading or loading model weights."""
+    local_dir = Path(model_dir or DEFAULT_MODEL_DIR)
+    effective_repo_id = repo_id or os.getenv(MODEL_REPO_ID_ENV)
+    cache_root = Path(cache_dir or os.getenv(MODEL_CACHE_DIR_ENV) or DEFAULT_CACHE_DIR)
+    cache_dir_for_repo = _cache_target(cache_root, effective_repo_id) if effective_repo_id else None
+    local_available = _has_complete_checkpoint(local_dir)
+    cache_available = bool(cache_dir_for_repo and _has_complete_checkpoint(cache_dir_for_repo))
+
+    if local_available:
+        source = "local"
+    elif cache_available:
+        source = "bootstrap-cache"
+    elif effective_repo_id:
+        source = "configured-bootstrap-missing-cache"
+    else:
+        source = "missing"
+
+    return {
+        "model_dir": str(local_dir),
+        "local_checkpoint_available": local_available,
+        "bootstrap_repo_id_configured": bool(effective_repo_id),
+        "bootstrap_cache_available": cache_available,
+        "ready_for_prediction": local_available or cache_available,
+        "artifact_source": source,
+        "artifact_policy": "No dataset, checkpoint, or cache files are committed to the public repo.",
+    }

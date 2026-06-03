@@ -25,9 +25,11 @@ The Vision Transformer (ViT) splits an image into fixed patches, embeds them wit
 
 ## Inference & Serving
 - CLI: `python src/inference/predict.py --image-path <path>` (loads from `models/vit_catsdogs` or an optional bootstrap cache).
-- API: FastAPI (`src/api/main.py`) exposes `/predict` for image uploads -> JSON and `/health` for basic runtime status.
+- API: FastAPI (`src/api/main.py`) exposes `/predict` for image uploads -> JSON and `/health` for runtime plus checkpoint-readiness status.
 - UI: Streamlit (`src/ui/app.py`) uploads an image, calls the API, and shows the prediction.
 - Bootstrap path: if no local checkpoint exists, set `VIT_PET_MODEL_REPO_ID` to a published fine-tuned checkpoint and the CLI/API can download it into `.cache/vit-pet-models/` on first run.
+
+The health endpoint intentionally does not load weights or download artifacts. It reports whether a local checkpoint or bootstrap cache is present, so a reviewer can verify deployment readiness without relying on private model files.
 
 ## Structure & Usage
 - `src/training`: data inspection and ViT fine-tuning.
@@ -51,6 +53,7 @@ Run:
 - Public metrics should be regenerated from a project-owned checkpoint before being quoted externally.
 - Modular layout simplifies testing and extension.
 - Future: more epochs/tuning, augmentation, metrics logging, early stopping, publishing a project-owned fine-tuned checkpoint, adding a model card, adding a dated evaluation artifact, and optional image-verification toggle for huge datasets.
+- Public promotion templates now live in `docs/model-card-template.md` and `docs/evaluation-template.md`; they should be filled only after a reproducible checkpoint and evaluation run exists.
 
 ## Delivery Summary
 The project ties together data validation, ViT fine-tuning, FastAPI serving, CLI prediction, and a Streamlit review UI. The main engineering value is the separation between training, inference, API, and UI code, plus a public-repo posture that keeps datasets and model artifacts outside version control. Next steps are richer evaluation, broader tuning/augmentation, a project-owned public checkpoint, and broader tests around API/UI behavior.

@@ -9,4 +9,7 @@ def test_health_endpoint_is_available_without_loading_model_dependencies():
     response = client.get("/health")
 
     assert response.status_code == 200
-    assert response.json()["status"] == "ok"
+    payload = response.json()
+    assert payload["status"] == "ok"
+    assert "ready_for_prediction" in payload
+    assert "artifact_policy" in payload
