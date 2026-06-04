@@ -37,6 +37,14 @@ Generate a release checksum manifest:
 python src/training/release_manifest.py --artifact-dir models/vit_catsdogs --output outputs/release/model-release-manifest.json
 ```
 
+Run a bounded release-candidate workflow with safe defaults:
+
+```
+powershell -ExecutionPolicy Bypass -File scripts\run_release_candidate.ps1
+```
+
+See `docs/release-candidate-runbook.md` for promotion gates and artifact policy.
+
 ## Required Public Artifacts
 
 - `outputs/evaluation/eval.json`
@@ -50,3 +58,5 @@ python src/training/release_manifest.py --artifact-dir models/vit_catsdogs --out
 ## Release Boundary
 
 Do not commit datasets, checkpoints, or local evaluation outputs to normal git history. Public release happens through a GitHub Release asset after checksums are generated and the model card is completed.
+
+The RC50 workflow is useful engineering evidence because it exercises the complete path. It is not enough by itself for a public model-quality claim or prediction screenshot.

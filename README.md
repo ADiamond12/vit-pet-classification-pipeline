@@ -17,6 +17,8 @@ This is a supporting ML-delivery project until a project-owned checkpoint is pub
 
 The repo now includes the full promotion path: Oxford-IIIT Pet binary dataset preparation, deterministic fine-tuning metadata, evaluation JSON, confusion matrix output, model-card templates, and a checksum manifest for GitHub Release assets. Model weights still stay out of normal git history.
 
+For a bounded end-to-end candidate run, use `scripts/run_release_candidate.ps1`. It prepares a public subset, trains a local checkpoint, writes evaluation artifacts, and generates the release checksum manifest in ignored folders.
+
 ## Tech stack
 
 - Hugging Face Transformers on PyTorch
@@ -42,7 +44,8 @@ For a safe review without private datasets or model weights:
 3. Inspect `src/training/prepare_oxford_pet_binary.py` for public dataset preparation.
 4. Inspect `src/training/train_vit.py` and `src/training/eval_vit.py` for training metadata, eval JSON, and confusion matrix output.
 5. Inspect `src/api/main.py`, `src/inference/predict.py`, and `src/ui/app.py` for delivery surfaces.
-6. Launch the UI with `streamlit run src/ui/app.py` to verify the clean upload flow.
+6. Run `powershell -ExecutionPolicy Bypass -File scripts\run_release_candidate.ps1` if you want to exercise the full local prepare-train-evaluate-manifest path.
+7. Launch the UI with `streamlit run src/ui/app.py` to verify the clean upload flow.
 
 Prediction screenshots are intentionally not shipped until a project-owned public checkpoint is published or a local checkpoint is trained in `models/vit_catsdogs`.
 
@@ -51,6 +54,7 @@ Prediction screenshots are intentionally not shipped until a project-owned publi
 - **Problem:** many ML demos publish a prediction screen without proving where the model, data, and metrics came from.
 - **First command:** `pytest`
 - **Proof artifact:** safe empty-state UI screenshot plus tests for checkpoint resolution, API contract behavior, eval artifact generation, and release-manifest checksums.
+- **Candidate workflow:** `scripts/run_release_candidate.ps1` runs prepare, train, evaluate, and checksum manifest generation with safe local defaults.
 - **Visual proof:** `assets/ui-empty.png` shows the review UI without implying an unavailable checkpoint.
 - **Health proof:** `/health` reports whether a local or bootstrap-cached checkpoint is ready without loading weights or downloading anything.
 - **Validation:** pytest tests and GitHub Actions CI cover checkpoint status, helper behavior, API contract, evaluation artifacts, release manifest checksums, and public UI boundary wording.
@@ -68,6 +72,8 @@ To promote this from supporting project to a stronger ML portfolio project:
 6. Capture one prediction screenshot from that owned checkpoint.
 7. Keep the no-private-artifact rule: `data/`, `models/`, `.cache/`, and `outputs/` stay ignored unless a curated public artifact is intentionally released.
 
+The RC50 local candidate is intentionally small and should remain workflow evidence unless the resulting metrics are strong enough for public model-quality presentation.
+
 ## Directory layout
 
 ```
@@ -75,6 +81,7 @@ vit-pet-classification-pipeline/
 |- data/             # ignored: labels, images, prepared public dataset copies
 |- models/           # ignored: saved fine-tuned model/processor
 |- outputs/          # ignored: evaluation, release, and local run artifacts
+|- scripts/          # release-candidate runner
 |- src/
 |  |- training/      # prepare data, inspect data, train, evaluate, release manifest
 |  |- inference/     # bootstrap.py, predict.py
@@ -142,6 +149,10 @@ Oxford-IIIT Pet is documented by the University of Oxford and can be loaded thro
 - Generate a checksum manifest before attaching model files to a GitHub Release:
   ```
   python src/training/release_manifest.py --artifact-dir models/vit_catsdogs --output outputs/release/model-release-manifest.json
+  ```
+- Run the bounded release-candidate workflow:
+  ```
+  powershell -ExecutionPolicy Bypass -File scripts\run_release_candidate.ps1
   ```
 - Run the API:
   ```
