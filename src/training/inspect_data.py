@@ -7,7 +7,7 @@ import pandas as pd
 
 
 def inspect(data_dir: str = "data", filename_col: str = "image_name"):
-    """Print dataset overview and report which sampled files are missing."""
+    """Print dataset summary and report which sampled files are missing."""
     labels_path = os.path.join(data_dir, "labels.csv")
     images_dir = os.path.join(data_dir, "images")
 

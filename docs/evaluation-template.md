@@ -9,14 +9,17 @@ Use this file as the structure for a future reproducible evaluation run. Keep it
 - Dataset:
 - Split:
 - Command:
+- Seed:
+- Release manifest:
 
 ## Results
 
 - Accuracy:
-- Loss:
 - Class-level precision:
 - Class-level recall:
 - Confusion matrix:
+- Confusion matrix CSV:
+- Eval JSON:
 
 ## Error Review
 

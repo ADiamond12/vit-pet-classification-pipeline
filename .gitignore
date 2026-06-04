@@ -8,6 +8,7 @@ dist/
 *.egg-info/
 data/
 models/
+outputs/
 __pycache__/
 *.py[cod]
 .env

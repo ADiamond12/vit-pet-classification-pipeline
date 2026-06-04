@@ -20,6 +20,8 @@ Use this only after training or publishing a project-owned checkpoint. Do not qu
 ## Dataset
 
 - Dataset source:
+- Source URL:
+- License:
 - Label policy:
 - Train/validation split:
 - Data exclusions:
@@ -29,6 +31,8 @@ Use this only after training or publishing a project-owned checkpoint. Do not qu
 
 - Evaluation command:
 - Evaluation artifact:
+- Confusion matrix artifact:
+- Checksum manifest:
 - Accuracy:
 - Precision/recall or confusion matrix:
 - Evaluation date:
@@ -43,7 +47,9 @@ Use this only after training or publishing a project-owned checkpoint. Do not qu
 ## Public Release Checklist
 
 - [ ] Dataset source is documented.
+- [ ] Dataset license is documented.
 - [ ] Evaluation artifact is reproducible.
+- [ ] Release manifest contains SHA256 checksums.
 - [ ] Checkpoint is owned or explicitly allowed for public use.
 - [ ] Prediction screenshot links to this model card.
 - [ ] No private files, local paths, or unsupported claims are included.

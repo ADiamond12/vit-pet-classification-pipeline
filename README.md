@@ -1,34 +1,36 @@
-﻿# ViT Pet Classification Pipeline
+# ViT Pet Classification Pipeline
 
-End-to-end computer-vision delivery path for cats-vs-dogs classification: data checks, Vision Transformer fine-tuning, FastAPI inference, CLI prediction, and a Streamlit review UI.
+Computer-vision delivery path for cats-vs-dogs classification: public dataset preparation, Vision Transformer fine-tuning, evaluation artifacts, FastAPI inference, CLI prediction, and a Streamlit review UI.
 
 ![Streamlit UI empty state](assets/ui-empty.png)
 
 ## What this demonstrates
 
-- A practical computer-vision delivery path, not only a notebook experiment.
-- Separate training, inference, API, and UI modules.
-- Public-repo posture: no datasets, model weights, `.env` files, or private artifacts committed.
-- Lightweight CI tests that validate inference/bootstrap helper behavior without requiring model weights.
+- ML delivery engineering, not only a notebook experiment.
+- Separate dataset preparation, training, evaluation, inference, API, and UI modules.
+- Public-repo posture: no datasets, model weights, credential files, or private artifacts committed.
+- Tests that validate checkpoint resolution, API contract behavior, public UI boundaries, evaluation artifacts, and release-manifest checksums without requiring model weights.
 
-## Portfolio Role
+## Portfolio role
 
-This is a supporting ML-delivery project. Its current public value is the engineering boundary around a vision model: training scripts, checkpoint resolution, FastAPI serving, CLI prediction, and a Streamlit review UI without committing private datasets or model weights.
+This is a supporting ML-delivery project until a project-owned checkpoint is published with a reproducible evaluation artifact. The current public value is the engineering boundary around a vision model: how data is prepared, how a checkpoint is trained, how evaluation evidence is written, how inference is served, and how the UI behaves when a checkpoint is not present.
 
-It should become a flagship ML project only after a project-owned checkpoint is published with a reproducible evaluation artifact. Until then, the honest demo is the safe empty-state UI plus tests that prove the delivery surfaces can run without private artifacts.
+The repo now includes the full promotion path: Oxford-IIIT Pet binary dataset preparation, deterministic fine-tuning metadata, evaluation JSON, confusion matrix output, model-card templates, and a checksum manifest for GitHub Release assets. Model weights still stay out of normal git history.
 
 ## Tech stack
-- Hugging Face Transformers (ViT) on PyTorch
+
+- Hugging Face Transformers on PyTorch
+- torchvision for the Oxford-IIIT Pet loader
 - NumPy and pandas for data handling
 - FastAPI for the inference endpoint
-- Streamlit for the optional UI
-- Git for version control
+- Streamlit for the optional review UI
+- pytest for lightweight public checks
 
 ## Repository posture
 
 - `LICENSE` and `SECURITY.md` are included for public sharing.
 - CI runs lightweight tests that do not require shipping model weights.
-- Model artifacts and datasets stay out of version control on purpose.
+- Model artifacts, datasets, caches, and local outputs stay out of version control.
 - The repo supports local checkpoints first and an optional first-run bootstrap path for a published fine-tuned model.
 
 ## Reviewer walkthrough
@@ -36,55 +38,62 @@ It should become a flagship ML project only after a project-owned checkpoint is 
 For a safe review without private datasets or model weights:
 
 1. Read the public boundaries in `SECURITY.md`.
-2. Run `pytest` to verify the inference/bootstrap helper layer.
-3. Inspect `src/training/` for the data inspection, fine-tuning, and evaluation path.
-4. Inspect `src/api/main.py`, `src/inference/predict.py`, and `src/ui/app.py` for the delivery surfaces.
-5. Launch the UI with `streamlit run src/ui/app.py` to verify the clean upload flow.
+2. Run `pytest` to verify inference, API, UI-boundary, evaluation-artifact, and release-manifest behavior.
+3. Inspect `src/training/prepare_oxford_pet_binary.py` for public dataset preparation.
+4. Inspect `src/training/train_vit.py` and `src/training/eval_vit.py` for training metadata, eval JSON, and confusion matrix output.
+5. Inspect `src/api/main.py`, `src/inference/predict.py`, and `src/ui/app.py` for delivery surfaces.
+6. Launch the UI with `streamlit run src/ui/app.py` to verify the clean upload flow.
 
 Prediction screenshots are intentionally not shipped until a project-owned public checkpoint is published or a local checkpoint is trained in `models/vit_catsdogs`.
 
-## Reviewer Proof
+## Reviewer proof
 
-- **Problem:** many ML demos publish a prediction screen without explaining where the model, data, and metrics came from.
+- **Problem:** many ML demos publish a prediction screen without proving where the model, data, and metrics came from.
 - **First command:** `pytest`
-- **Proof artifact:** safe empty-state UI screenshot plus tests for checkpoint resolution and API contract behavior.
+- **Proof artifact:** safe empty-state UI screenshot plus tests for checkpoint resolution, API contract behavior, eval artifact generation, and release-manifest checksums.
 - **Visual proof:** `assets/ui-empty.png` shows the review UI without implying an unavailable checkpoint.
 - **Health proof:** `/health` reports whether a local or bootstrap-cached checkpoint is ready without loading weights or downloading anything.
-- **Validation:** pytest tests and GitHub Actions CI cover checkpoint status, helper behavior, API contract, and public UI boundary wording.
+- **Validation:** pytest tests and GitHub Actions CI cover checkpoint status, helper behavior, API contract, evaluation artifacts, release manifest checksums, and public UI boundary wording.
 - **Current limitation:** prediction screenshots, confidence scores, and accuracy claims are withheld until a project-owned checkpoint and evaluation artifact are published.
 
-## Next Flagship Step
+## Next flagship step
 
-To promote this from supporting project to stronger portfolio project:
+To promote this from supporting project to a stronger ML portfolio project:
 
-1. Train or publish a project-owned checkpoint.
-2. Regenerate metrics from a reproducible evaluation run.
-3. Fill in `docs/model-card-template.md` and `docs/evaluation-template.md` with dataset source, label policy, limitations, and evaluation date.
-4. Capture one prediction screenshot from that owned checkpoint.
-5. Keep the no-private-artifact rule: `data/`, `models/`, `.cache/`, and local outputs stay ignored unless a curated public artifact is intentionally released.
+1. Prepare Oxford-IIIT Pet binary data with `src/training/prepare_oxford_pet_binary.py`.
+2. Train or publish a project-owned checkpoint under ignored `models/`.
+3. Regenerate metrics with `src/training/eval_vit.py`, which writes `eval.json`, `confusion_matrix.csv`, and `evaluation-report.md`.
+4. Fill in `docs/model-card-template.md` and `docs/evaluation-template.md` with dataset source, label policy, limitations, and evaluation date.
+5. Generate `outputs/release/model-release-manifest.json` and upload the checkpoint as a GitHub Release asset with checksum.
+6. Capture one prediction screenshot from that owned checkpoint.
+7. Keep the no-private-artifact rule: `data/`, `models/`, `.cache/`, and `outputs/` stay ignored unless a curated public artifact is intentionally released.
 
 ## Directory layout
+
 ```
 vit-pet-classification-pipeline/
-|- data/             # (ignored) labels.csv and images/
-|- models/           # (ignored) saved fine-tuned model/processor
+|- data/             # ignored: labels, images, prepared public dataset copies
+|- models/           # ignored: saved fine-tuned model/processor
+|- outputs/          # ignored: evaluation, release, and local run artifacts
 |- src/
-|  |- training/      # inspect_data.py, train_vit.py, eval_vit.py
-|  |- inference/     # bootstrap.py, predict.py (CLI helper)
-|  |- api/           # main.py (FastAPI /predict)
-|  |- ui/            # app.py (Streamlit UI)
+|  |- training/      # prepare data, inspect data, train, evaluate, release manifest
+|  |- inference/     # bootstrap.py, predict.py
+|  |- api/           # main.py
+|  |- ui/            # app.py
 |- assets/           # sanitized screenshots
+|- docs/             # model card, evaluation template, demo notes
 |- requirements.txt
 |- .gitignore
 `- README.md
 ```
 
 ## Installation
-1. Clone or extract into `vit-pet-classification-pipeline`.
-2. (Recommended) Create and activate a virtual env:
+
+1. Clone the repo.
+2. Create and activate a virtual environment:
    ```
    python -m venv .venv
-   .\.venv\Scripts\Activate.ps1   # PowerShell
+   .\.venv\Scripts\Activate.ps1
    ```
 3. Install dependencies:
    ```
@@ -94,30 +103,45 @@ vit-pet-classification-pipeline/
    ```
    pip install -e .[dev]
    ```
-4. Choose one model path:
-   - local training path: train into `models/vit_catsdogs`
-   - bootstrap path: set `VIT_PET_MODEL_REPO_ID` to a published fine-tuned checkpoint so the API/CLI can download it on first run
-5. Add your dataset under `data/` if you plan to train locally:
-   - `data/labels.csv` with filename and label columns (defaults: `image_name`, `label`)
-   - `data/images/` containing the referenced images
+
+## Public dataset preparation
+
+For a reproducible cats-vs-dogs path, use Oxford-IIIT Pet through torchvision:
+
+```
+python src/training/prepare_oxford_pet_binary.py --root data/raw --output-dir data/oxford_pet_binary
+```
+
+This writes:
+
+- `data/oxford_pet_binary/labels.csv`
+- `data/oxford_pet_binary/images/`
+- `data/oxford_pet_binary/dataset_manifest.json`
+
+Oxford-IIIT Pet is documented by the University of Oxford and can be loaded through `torchvision.datasets.OxfordIIITPet` with `target_types="binary-category"`. Prepared data remains ignored by git.
 
 ## Usage
+
 - Inspect data paths:
   ```
-  python src/training/inspect_data.py
+  python src/training/inspect_data.py --data-dir data/oxford_pet_binary
   ```
 - Train the model:
   ```
-  python src/training/train_vit.py --data-dir data --output-dir models/vit_catsdogs
+  python src/training/train_vit.py --data-dir data/oxford_pet_binary --output-dir models/vit_catsdogs --epochs 1 --freeze-encoder
   ```
-- Or bootstrap from a published fine-tuned checkpoint at runtime:
+- Bootstrap from a published fine-tuned checkpoint at runtime:
   ```
   $env:VIT_PET_MODEL_REPO_ID="<published-fine-tuned-checkpoint>"
   uvicorn src.api.main:app --reload
   ```
-- Evaluate a local checkpoint:
+- Evaluate a local checkpoint and write reviewer artifacts:
   ```
-  python src/training/eval_vit.py --data-dir data --model-dir models/vit_catsdogs
+  python src/training/eval_vit.py --data-dir data/oxford_pet_binary --model-dir models/vit_catsdogs --output-dir outputs/evaluation
+  ```
+- Generate a checksum manifest before attaching model files to a GitHub Release:
+  ```
+  python src/training/release_manifest.py --artifact-dir models/vit_catsdogs --output outputs/release/model-release-manifest.json
   ```
 - Run the API:
   ```
@@ -137,9 +161,10 @@ vit-pet-classification-pipeline/
   ```
 
 ## Notes
+
 - Defaults expect labels `cat` and `dog`; adjust flags if your CSV differs.
 - The classifier head is reinitialized for 2 classes; the mismatched-size warning is expected.
-- `data/`, `models/`, `.cache/`, and `.venv/` are ignored to keep the repo lean.
+- `data/`, `models/`, `.cache/`, `outputs/`, and `.venv/` are ignored to keep the repo lean.
 - If `models/vit_catsdogs` is missing, the API and CLI can bootstrap from `VIT_PET_MODEL_REPO_ID`.
 - This repo does not pin a public checkpoint by default; use the bootstrap env var only for a published fine-tuned model you explicitly want to trust.
 
@@ -151,7 +176,7 @@ Run the current lightweight test suite with:
 pytest
 ```
 
-These tests cover the inference helper layer without requiring committed model weights, private datasets, or a published checkpoint.
+These tests cover the inference helper layer, API contract, public UI boundary, evaluation artifact generation, and release manifest checksums without requiring committed model weights, private datasets, or a published checkpoint.
 
 ## Demo screenshot
 
@@ -167,9 +192,6 @@ Prediction screenshots should be regenerated only after a project-owned public c
 
 - [x] README, report, license, security notes
 - [x] Tests pass without model weights
-- [x] Dataset/model/cache folders ignored
+- [x] Dataset/model/cache/output folders ignored
 - [x] Sanitized screenshots only
-- [x] No API keys or private data committed
-
-
-
+- [x] No credentials or private data committed
