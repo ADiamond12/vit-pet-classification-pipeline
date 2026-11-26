@@ -3,10 +3,11 @@ torchvision
 transformers
 huggingface-hub
 accelerate>=0.26.0
-pillow
+pillow>=13.0,<14.0
 numpy
 pandas
-fastapi
+fastapi>=0.165,<1.0
+starlette>=1.10,<2.0
 uvicorn
 streamlit
-python-multipart
+python-multipart>=0.0.34,<1.0
